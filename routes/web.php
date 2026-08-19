@@ -54,7 +54,4 @@ Route::middleware('auth')->group(function () {
 
     // Modul Laporan
     Route::get('/app/laporan/data', [C_Laporan::class, 'dataLaporan'])->name('laporan.data');
-
-    // Info Aplikasi
-    Route::get('/app/info-aplikasi', [C_Dashboard::class, 'infoAplikasi'])->name('info-aplikasi');
 });

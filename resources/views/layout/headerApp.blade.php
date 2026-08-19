@@ -139,11 +139,6 @@
                                     <i class="mdi mdi-file-document-box-search mr-2"></i>Laporan
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{ Request::is('app/info-aplikasi*') ? 'active' : '' }}" href="{{ url('/app/info-aplikasi') }}">
-                                    <i class="mdi mdi-information mr-2"></i>Info Aplikasi
-                                </a>
-                            </li>
                         </ul>
                     </div>
                 </nav>

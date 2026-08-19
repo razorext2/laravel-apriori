@@ -30,10 +30,6 @@ class C_Dashboard extends Controller
         return view('main.berandaPage', $dr);
     }
 
-    public function infoAplikasi()
-    {
-        return view('main.infoAplikasi');
-    }
 
     function setAwal()
     {
