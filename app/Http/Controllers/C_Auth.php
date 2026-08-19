@@ -1,38 +1,62 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Http\Request;
 
-use App\Models\M_User;
+use App\Models\User;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\View\View;
 
 class C_Auth extends Controller
 {
-    public function loginPage()
+    /**
+     * Display the login page.
+     */
+    public function loginPage(): View
     {
         return view('auth.loginPage');
     }
-    public function loginProses(Request $request)
+
+    /**
+     * Handle an authentication attempt.
+     */
+    public function loginProses(Request $request): JsonResponse
     {
-        // {'username':username, 'password':password}
-        $tUser = M_User::where('username', $request -> username) -> count();
-        if($tUser < 1){
-            $status = "NO_USER";
-        }else{
-            $dUser = M_User::where('username', $request -> username) -> first();
-            $cekUser = password_verify($request -> password, $dUser -> password);
-            if($cekUser == true){
-                $status = "SUCCESS";
-            }else{
-                $status = "WRONG_PASSWORD";
-            }
-            
+        $request->validate([
+            'username' => ['required', 'string'],
+            'password' => ['required', 'string'],
+        ]);
+
+        $user = User::where('username', $request->username)->first();
+
+        if (! $user) {
+            return response()->json(['status' => 'NO_USER']);
         }
-        $dr = ['status' => $status];
-        return response()->json($dr);
+
+        if (! Hash::check($request->password, $user->password) && ! password_verify($request->password, $user->password)) {
+            return response()->json(['status' => 'WRONG_PASSWORD']);
+        }
+
+        Auth::login($user);
+        $request->session()->regenerate();
+
+        return response()->json(['status' => 'SUCCESS']);
     }
-    public function logout(Request $request)
+
+    /**
+     * Log the user out of the application.
+     */
+    public function logout(Request $request): RedirectResponse
     {
-        return redirect('/');
+        Auth::logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('login');
     }
 }
+

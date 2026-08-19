@@ -98,13 +98,12 @@
                     <div class="dropdown d-inline-block">
                         <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <img class="rounded-circle header-profile-user" src="{{ asset('ladun/apaxy/') }}/images/users/avatar-1.jpg" alt="Header Avatar">
-                            <span class="d-none d-sm-inline-block ml-1">Administrator</span>
+                            <span class="d-none d-sm-inline-block ml-1">{{ Auth::user()->username ?? 'Administrator' }}</span>
                             <i class="mdi mdi-chevron-down d-none d-sm-inline-block"></i>
                         </button>
                         <div class="dropdown-menu dropdown-menu-right">
                             <!-- item-->
-
-                            <a class="dropdown-item" href="{{ url('/auth/logout') }}"><i class="mdi mdi-logout font-size-16 align-middle mr-1"></i> Logout</a>
+                            <a class="dropdown-item" href="{{ route('logout') }}"><i class="mdi mdi-logout font-size-16 align-middle mr-1"></i> Logout</a>
                         </div>
                     </div>
                 </div>

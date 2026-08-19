@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 use App\Models\M_Pengujian;
@@ -23,7 +24,7 @@ class C_Apriori extends Controller
     {
         $minSupp = floatval($request->support);
         $minConfidence = floatval($request->confidence);
-        $namaPenguji = $request->nama ?? 'Administrator';
+        $namaPenguji = $request->nama ?? (Auth::user()?->username ?? 'Administrator');
 
         // Hitung total seluruh transaksi (jumlah faktur unik)
         $totalTransaksiSemua = M_Penjualan::distinct('no_faktur')->count('no_faktur');
