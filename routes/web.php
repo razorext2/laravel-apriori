@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\C_Landing;
 use App\Http\Controllers\C_Auth;
 use App\Http\Controllers\C_Dashboard;
 use App\Http\Controllers\C_Produk;
@@ -10,11 +11,18 @@ use App\Http\Controllers\C_Laporan;
 
 /*
 |--------------------------------------------------------------------------
+| Public Landing Page
+|--------------------------------------------------------------------------
+*/
+Route::get('/', [C_Landing::class, 'index'])->name('landing');
+
+/*
+|--------------------------------------------------------------------------
 | Guest Routes
 |--------------------------------------------------------------------------
 */
 Route::middleware('guest')->group(function () {
-    Route::get('/', [C_Auth::class, 'loginPage'])->name('login');
+    Route::get('/login', [C_Auth::class, 'loginPage'])->name('login');
     Route::post('/auth/login/proses', [C_Auth::class, 'loginProses'])
         ->middleware('throttle:5,1')
         ->name('login.proses');

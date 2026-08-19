@@ -54,7 +54,7 @@
                             </span>
                             <span class="logo-lg">
                                 <span class="hoya-brand-title text-dark">
-                                    <i class="mdi mdi-content-cut text-primary mr-2 font-size-20"></i>
+                                    <i class="mdi mdi-content-cut text-dark mr-2 font-size-20"></i>
                                     <span>HOYA <small class="font-weight-normal text-muted">BARBERSHOP</small></span>
                                 </span>
                             </span>
@@ -68,7 +68,7 @@
                             </span>
                             <span class="logo-lg">
                                 <span class="hoya-brand-title text-white">
-                                    <i class="mdi mdi-content-cut text-info mr-2 font-size-20"></i>
+                                    <i class="mdi mdi-content-cut text-white mr-2 font-size-20"></i>
                                     <span>HOYA <small class="font-weight-normal text-white-50">BARBERSHOP</small></span>
                                 </span>
                             </span>
@@ -82,8 +82,8 @@
 
                     <!-- Topbar Title / Info Badge -->
                     <div class="d-none d-md-flex align-items-center ml-3">
-                        <span class="badge badge-soft-primary px-3 py-2 font-size-12 font-weight-semibold rounded-pill d-flex align-items-center">
-                            <i class="mdi mdi-scissors-cutting mr-1 font-size-14"></i> Hoya Barbershop
+                        <span class="badge badge-monochrome px-3 py-2 font-size-12 font-weight-semibold rounded-pill d-flex align-items-center">
+                            <i class="mdi mdi-content-cut mr-1 font-size-14"></i> Hoya Barbershop
                             <span class="mx-2 text-muted">|</span>
                             <span class="text-secondary font-weight-normal">Sistem Analisa Pola Transaksi Penjualan (Apriori)</span>
                         </span>

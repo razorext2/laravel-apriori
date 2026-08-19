@@ -1,148 +1,386 @@
 /* ==========================================================================
-   Hoya Barbershop - Custom Dashboard Layout & Component Refinements
+   Hoya Barbershop - Monochromatic Design System & Layout Theme
    ========================================================================== */
 
-/* Brand & Typography */
-.hoya-brand-icon-sm {
-    width: 38px;
-    height: 38px;
-    background: linear-gradient(135deg, #3d8ef8 0%, #1168d6 100%);
-    border-radius: 8px;
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+    --hoya-black: #0a0a0c;
+    --hoya-dark: #111827;
+    --hoya-charcoal: #1e242b;
+    --hoya-gray-50: #f8fafc;
+    --hoya-gray-100: #f1f5f9;
+    --hoya-gray-200: #e2e8f0;
+    --hoya-gray-300: #cbd5e1;
+    --hoya-gray-400: #94a3b8;
+    --hoya-gray-500: #64748b;
+    --hoya-gray-600: #475569;
+    --hoya-gray-700: #334155;
+    --hoya-gray-800: #1e293b;
+    --hoya-white: #ffffff;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: var(--hoya-dark);
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ==========================================================================
+   Monochromatic Login Page Styling
+   ========================================================================== */
+
+.bg-login-monochrome {
+    background-color: var(--hoya-black) !important;
+    background-image: radial-gradient(circle at 50% 10%, #1f2530 0%, #0a0a0c 65%) !important;
+    min-height: 100vh;
+}
+
+.login-geometric-logo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.login-geo-shape {
+    background-color: #ffffff;
+    display: inline-block;
+}
+
+.login-geo-square {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+}
+
+.login-geo-circle {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.login-geo-triangle {
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 12px solid #ffffff;
+    background-color: transparent;
+}
+
+.login-card-monochrome {
+    background: #ffffff;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+}
+
+.login-card-monochrome .form-control {
+    background-color: #f8fafc;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 12px 16px;
+    height: auto;
+    font-size: 14px;
+    color: var(--hoya-dark);
+    transition: all 0.2s ease;
+}
+
+.login-card-monochrome .form-control:focus {
+    background-color: #ffffff;
+    border-color: #000000;
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.08);
+}
+
+.btn-login-monochrome {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 12px 24px;
+    border-radius: 50px;
+    border: none;
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-login-monochrome:hover {
+    background-color: #222222 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
+    color: #ffffff !important;
+}
+
+.home-btn-monochrome {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    z-index: 100;
+}
+
+.home-btn-monochrome a {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
     display: inline-flex;
     align-items: center;
     justify-content: center;
     color: #ffffff;
     font-size: 20px;
-    box-shadow: 0 4px 10px rgba(61, 142, 248, 0.3);
+    transition: all 0.2s ease;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.home-btn-monochrome a:hover {
+    background: #ffffff;
+    color: #000000;
+    transform: scale(1.05);
+}
+
+/* ==========================================================================
+   Monochromatic Dashboard Layout Styling
+   ========================================================================== */
+
+/* Brand & Typography */
+.hoya-brand-icon-sm {
+    width: 36px;
+    height: 36px;
+    background: #000000;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 18px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .hoya-brand-title {
     font-size: 15px;
-    font-weight: 700;
-    letter-spacing: 0.8px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-/* Sidebar Enhancements */
+/* Sidebar Monochromatic */
 body[data-sidebar="dark"] .vertical-menu {
-    background: #1e272d;
-    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+    background: var(--hoya-black);
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 4px 0 15px rgba(0, 0, 0, 0.05);
 }
 
 body[data-sidebar="dark"] #sidebar-menu {
-    padding-top: 15px;
+    padding-top: 18px;
 }
 
 body[data-sidebar="dark"] #sidebar-menu .menu-title {
-    color: #64748b;
+    color: #475569;
     font-size: 10.5px;
-    font-weight: 700;
+    font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    padding: 14px 22px 6px;
+    letter-spacing: 1.2px;
+    padding: 16px 24px 6px;
 }
 
 body[data-sidebar="dark"] #sidebar-menu ul li a {
     color: #94a3b8;
     font-weight: 500;
     font-size: 13.5px;
-    padding: 10px 22px;
+    padding: 11px 24px;
     border-left: 3px solid transparent;
-    transition: all 0.25s ease-in-out;
+    transition: all 0.2s ease-in-out;
 }
 
 body[data-sidebar="dark"] #sidebar-menu ul li a i {
-    color: #708197;
+    color: #64748b;
     font-size: 1.15rem;
-    margin-right: 6px;
-    transition: all 0.25s ease-in-out;
+    margin-right: 8px;
+    transition: all 0.2s ease-in-out;
 }
 
 body[data-sidebar="dark"] #sidebar-menu ul li a:hover {
-    color: #f1f5f9;
-    background: rgba(255, 255, 255, 0.03);
-    border-left-color: rgba(61, 142, 248, 0.5);
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.04);
+    border-left-color: rgba(255, 255, 255, 0.4);
 }
 
 body[data-sidebar="dark"] #sidebar-menu ul li a:hover i {
-    color: #3d8ef8;
+    color: #ffffff;
     transform: translateX(2px);
 }
 
 body[data-sidebar="dark"] #sidebar-menu ul li.mm-active > a,
 body[data-sidebar="dark"] #sidebar-menu ul li a.active {
     color: #ffffff !important;
-    background: linear-gradient(90deg, rgba(61, 142, 248, 0.15) 0%, rgba(61, 142, 248, 0.02) 100%) !important;
-    border-left-color: #3d8ef8 !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border-left-color: #ffffff !important;
+    font-weight: 600;
 }
 
 body[data-sidebar="dark"] #sidebar-menu ul li.mm-active > a i,
 body[data-sidebar="dark"] #sidebar-menu ul li a.active i {
-    color: #3d8ef8 !important;
+    color: #ffffff !important;
 }
 
-/* Submenu Styling */
-body[data-sidebar="dark"] #sidebar-menu ul li ul.sub-menu {
-    background: #182025;
-    padding: 4px 0;
-}
-
-body[data-sidebar="dark"] #sidebar-menu ul li ul.sub-menu li a {
-    padding: 8px 22px 8px 48px;
-    font-size: 13px;
-    color: #8b9baa;
-    border-left: 3px solid transparent;
-}
-
-body[data-sidebar="dark"] #sidebar-menu ul li ul.sub-menu li a:hover {
-    color: #f1f5f9;
-    background: rgba(255, 255, 255, 0.02);
-}
-
-body[data-sidebar="dark"] #sidebar-menu ul li ul.sub-menu li.mm-active > a,
-body[data-sidebar="dark"] #sidebar-menu ul li ul.sub-menu li a.active {
-    color: #3d8ef8 !important;
-    font-weight: 600;
-}
-
-/* Topbar Enhancements */
+/* Topbar Monochromatic */
 #page-topbar {
-    border-bottom: 1px solid #eef2f5;
+    border-bottom: 1px solid #eaedf1;
     background: #ffffff;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
 }
 
 .header-profile-user {
-    width: 38px;
-    height: 38px;
-    border: 2px solid #e2e8f0;
+    width: 36px;
+    height: 36px;
+    border: 2px solid #000000;
     transition: all 0.2s ease;
 }
 
 #page-header-user-dropdown:hover .header-profile-user {
-    border-color: #3d8ef8;
-    box-shadow: 0 0 0 3px rgba(61, 142, 248, 0.15);
+    border-color: #000000;
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+}
+
+.badge-monochrome {
+    color: #0f172a;
+    background-color: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    font-weight: 600;
 }
 
 .badge-soft-primary {
-    color: #3d8ef8;
-    background-color: rgba(61, 142, 248, 0.1);
-    border: 1px solid rgba(61, 142, 248, 0.18);
+    color: #0f172a;
+    background-color: #f1f5f9;
+    border: 1px solid #e2e8f0;
 }
 
-/* Breadcrumb & Card Styling */
+/* Dashboard Cards & Widgets */
+.main-content {
+    background-color: #f8fafc;
+}
+
+.card {
+    border: 1px solid #e9edf2;
+    border-radius: 14px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+    margin-bottom: 24px;
+}
+
+.avatar-title.bg-monochrome {
+    background-color: var(--hoya-dark) !important;
+    color: #ffffff !important;
+}
+
+.card-body h4 {
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: var(--hoya-dark);
+}
+
+.header-title {
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--hoya-dark);
+    letter-spacing: -0.3px;
+}
+
+/* Monochromatic Buttons Override */
+.btn-primary {
+    background-color: #000000 !important;
+    border-color: #000000 !important;
+    color: #ffffff !important;
+}
+
+.btn-primary:hover, .btn-primary:focus {
+    background-color: #222222 !important;
+    border-color: #222222 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+.btn-success {
+    background-color: #111827 !important;
+    border-color: #111827 !important;
+    color: #ffffff !important;
+}
+
+.btn-success:hover, .btn-success:focus {
+    background-color: #222222 !important;
+    border-color: #222222 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+.btn-info {
+    background-color: #334155 !important;
+    border-color: #334155 !important;
+    color: #ffffff !important;
+}
+
+.btn-info:hover, .btn-info:focus {
+    background-color: #1e293b !important;
+    border-color: #1e293b !important;
+}
+
+/* Tables Styling */
+.table thead th {
+    background-color: #f8fafc;
+    color: #475569;
+    font-size: 12.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    border-top: none;
+    border-bottom: 1.5px solid #e2e8f0;
+}
+
+.table td {
+    vertical-align: middle;
+    color: #1e293b;
+    font-size: 13.5px;
+    border-color: #f1f5f9;
+}
+
+.badge-success {
+    background-color: #111827;
+    color: #ffffff;
+}
+
+.badge-danger {
+    background-color: #dc2626;
+}
+
+.badge-info {
+    background-color: #334155;
+}
+
+/* Page Title & Breadcrumbs */
 .page-title-box {
-    padding-bottom: 20px;
+    padding: 16px 0 20px;
 }
 
 .page-title-box h4 {
-    font-weight: 600;
-    color: #1e293b;
+    font-weight: 800;
+    color: var(--hoya-dark);
+    letter-spacing: -0.5px;
 }
 
-/* Mobile & Collapsed responsive tweaks */
+.breadcrumb-item a {
+    color: #64748b;
+}
+
+.breadcrumb-item.active {
+    color: #0f172a;
+    font-weight: 600;
+}
+
 @media (max-width: 992px) {
     .navbar-brand-box {
         width: auto !important;

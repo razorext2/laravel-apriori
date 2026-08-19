@@ -9,10 +9,10 @@
             <div class="card-body">
                 <div class="media">
                     <div class="media-body">
-                        <h5 class="font-size-14">Total Transaksi</h5>
+                        <h5 class="font-size-14 text-muted">Total Transaksi</h5>
                     </div>
                     <div class="avatar-xs">
-                        <span class="avatar-title rounded-circle bg-primary">
+                        <span class="avatar-title rounded-circle bg-monochrome">
                             <i class="dripicons-box"></i>
                         </span>
                     </div>
@@ -27,10 +27,10 @@
             <div class="card-body">
                 <div class="media">
                     <div class="media-body">
-                        <h5 class="font-size-14">Total Layanan</h5>
+                        <h5 class="font-size-14 text-muted">Total Layanan</h5>
                     </div>
                     <div class="avatar-xs">
-                        <span class="avatar-title rounded-circle bg-primary">
+                        <span class="avatar-title rounded-circle bg-monochrome">
                             <i class="dripicons-briefcase"></i>
                         </span>
                     </div>
@@ -45,10 +45,10 @@
             <div class="card-body">
                 <div class="media">
                     <div class="media-body">
-                        <h5 class="font-size-14">Avg. Harga Layanan</h5>
+                        <h5 class="font-size-14 text-muted">Avg. Harga Layanan</h5>
                     </div>
                     <div class="avatar-xs">
-                        <span class="avatar-title rounded-circle bg-primary">
+                        <span class="avatar-title rounded-circle bg-monochrome">
                             <i class="dripicons-tags"></i>
                         </span>
                     </div>
@@ -63,10 +63,10 @@
             <div class="card-body">
                 <div class="media">
                     <div class="media-body">
-                        <h5 class="font-size-14">Total User</h5>
+                        <h5 class="font-size-14 text-muted">Total User</h5>
                     </div>
                     <div class="avatar-xs">
-                        <span class="avatar-title rounded-circle bg-primary">
+                        <span class="avatar-title rounded-circle bg-monochrome">
                             <i class="dripicons-user"></i>
                         </span>
                     </div>
