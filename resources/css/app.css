@@ -387,3 +387,43 @@ body[data-sidebar="dark"] #sidebar-menu ul li a.active i {
         padding: 0 10px;
     }
 }
+
+/* ==========================================================================
+   SPA Navigation Progress Bar & Transitions
+   ========================================================================== */
+
+#spa-progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #0a0a0c, #475569, #000000);
+    z-index: 99999;
+    transition: width 0.3s ease, opacity 0.3s ease;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+    pointer-events: none;
+}
+
+.spa-fade-in {
+    animation: spaFadeIn 0.2s ease-out;
+}
+
+@keyframes spaFadeIn {
+    from {
+        opacity: 0.8;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Modal Stacking Fix */
+.modal {
+    z-index: 1060 !important;
+}
+
+.modal-backdrop {
+    z-index: 1050 !important;
+}
+
+

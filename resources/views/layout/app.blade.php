@@ -3,9 +3,9 @@
 <!-- ============================================================== -->
 <!-- Start right Content here -->
 <!-- ============================================================== -->
-<div class="main-content">
+<div class="main-content" id="spa-main-content">
 
-    <div class="page-content">
+    <div class="page-content" id="spa-page-content">
         <div class="container-fluid">
 
             <!-- start page title -->
