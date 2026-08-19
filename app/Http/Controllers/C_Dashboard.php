@@ -38,6 +38,6 @@ class C_Dashboard extends Controller
     {
         $dataAwal = array();
         $dr = ['respon' => $dataAwal];
-        return \Response::json($dr);
+        return response()->json($dr);
     }
 }

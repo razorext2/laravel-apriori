@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use PDF;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 use App\Models\M_Pengujian;
 use App\Models\M_Penjualan;
@@ -98,7 +98,7 @@ class C_Apriori extends Controller
 
         $pengujian -> save();
         $dr = ['status' => 'sukses', 'kdPengujian' => $kdPengujian];
-        return \Response::json($dr);
+        return response()->json($dr);
     }
 
     public function hasilAnalisa(Request $request, $kdPengujian)

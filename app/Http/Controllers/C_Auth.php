@@ -29,7 +29,7 @@ class C_Auth extends Controller
             
         }
         $dr = ['status' => $status];
-        return \Response::json($dr);
+        return response()->json($dr);
     }
     public function logout(Request $request)
     {

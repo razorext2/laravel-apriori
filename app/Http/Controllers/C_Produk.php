@@ -29,13 +29,13 @@ class C_Produk extends Controller
         $produk -> active = "1";
         $produk -> save();
         $dr = ['status' => 'sukses'];
-        return \Response::json($dr);
+        return response()->json($dr);
     }
     public function getDataProdukRes(Request $request)
     {
         $dataProduk = M_Produk::where('kd_produk', $request -> idProduk) -> first();
         // $dr = ['status' => 'sukses'];
-        return \Response::json($dataProduk);
+        return response()->json($dataProduk);
     }
     public function prosesUpdateProduk(Request $request)
     {
@@ -46,13 +46,13 @@ class C_Produk extends Controller
             'kd_kategori' => $request -> kategori
         ]);
         $dr = ['status' => 'sukses'];
-        return \Response::json($dr);
+        return response()->json($dr);
     }
     public function prosesHapusProduk(Request $request)
     {
         M_Produk::where('kd_produk', $request -> idProduk) -> delete();
         $dr = ['status' => 'sukses'];
-        return \Response::json($dr);
+        return response()->json($dr);
     }
 
     public function prosesImportProduk(Request $request)
@@ -60,6 +60,6 @@ class C_Produk extends Controller
         Artisan::call('importDataProduk');
         $totalProduk = M_Produk::count();
         $dr = ['status' => 'sukses', 'totalProduk' => $totalProduk];
-        return \Response::json($dr);
+        return response()->json($dr);
     }
 }
