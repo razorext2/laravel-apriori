@@ -1,0 +1,151 @@
+/* ==========================================================================
+   Hoya Barbershop - Custom Dashboard Layout & Component Refinements
+   ========================================================================== */
+
+/* Brand & Typography */
+.hoya-brand-icon-sm {
+    width: 38px;
+    height: 38px;
+    background: linear-gradient(135deg, #3d8ef8 0%, #1168d6 100%);
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 20px;
+    box-shadow: 0 4px 10px rgba(61, 142, 248, 0.3);
+}
+
+.hoya-brand-title {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Sidebar Enhancements */
+body[data-sidebar="dark"] .vertical-menu {
+    background: #1e272d;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+}
+
+body[data-sidebar="dark"] #sidebar-menu {
+    padding-top: 15px;
+}
+
+body[data-sidebar="dark"] #sidebar-menu .menu-title {
+    color: #64748b;
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 14px 22px 6px;
+}
+
+body[data-sidebar="dark"] #sidebar-menu ul li a {
+    color: #94a3b8;
+    font-weight: 500;
+    font-size: 13.5px;
+    padding: 10px 22px;
+    border-left: 3px solid transparent;
+    transition: all 0.25s ease-in-out;
+}
+
+body[data-sidebar="dark"] #sidebar-menu ul li a i {
+    color: #708197;
+    font-size: 1.15rem;
+    margin-right: 6px;
+    transition: all 0.25s ease-in-out;
+}
+
+body[data-sidebar="dark"] #sidebar-menu ul li a:hover {
+    color: #f1f5f9;
+    background: rgba(255, 255, 255, 0.03);
+    border-left-color: rgba(61, 142, 248, 0.5);
+}
+
+body[data-sidebar="dark"] #sidebar-menu ul li a:hover i {
+    color: #3d8ef8;
+    transform: translateX(2px);
+}
+
+body[data-sidebar="dark"] #sidebar-menu ul li.mm-active > a,
+body[data-sidebar="dark"] #sidebar-menu ul li a.active {
+    color: #ffffff !important;
+    background: linear-gradient(90deg, rgba(61, 142, 248, 0.15) 0%, rgba(61, 142, 248, 0.02) 100%) !important;
+    border-left-color: #3d8ef8 !important;
+}
+
+body[data-sidebar="dark"] #sidebar-menu ul li.mm-active > a i,
+body[data-sidebar="dark"] #sidebar-menu ul li a.active i {
+    color: #3d8ef8 !important;
+}
+
+/* Submenu Styling */
+body[data-sidebar="dark"] #sidebar-menu ul li ul.sub-menu {
+    background: #182025;
+    padding: 4px 0;
+}
+
+body[data-sidebar="dark"] #sidebar-menu ul li ul.sub-menu li a {
+    padding: 8px 22px 8px 48px;
+    font-size: 13px;
+    color: #8b9baa;
+    border-left: 3px solid transparent;
+}
+
+body[data-sidebar="dark"] #sidebar-menu ul li ul.sub-menu li a:hover {
+    color: #f1f5f9;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+body[data-sidebar="dark"] #sidebar-menu ul li ul.sub-menu li.mm-active > a,
+body[data-sidebar="dark"] #sidebar-menu ul li ul.sub-menu li a.active {
+    color: #3d8ef8 !important;
+    font-weight: 600;
+}
+
+/* Topbar Enhancements */
+#page-topbar {
+    border-bottom: 1px solid #eef2f5;
+    background: #ffffff;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+}
+
+.header-profile-user {
+    width: 38px;
+    height: 38px;
+    border: 2px solid #e2e8f0;
+    transition: all 0.2s ease;
+}
+
+#page-header-user-dropdown:hover .header-profile-user {
+    border-color: #3d8ef8;
+    box-shadow: 0 0 0 3px rgba(61, 142, 248, 0.15);
+}
+
+.badge-soft-primary {
+    color: #3d8ef8;
+    background-color: rgba(61, 142, 248, 0.1);
+    border: 1px solid rgba(61, 142, 248, 0.18);
+}
+
+/* Breadcrumb & Card Styling */
+.page-title-box {
+    padding-bottom: 20px;
+}
+
+.page-title-box h4 {
+    font-weight: 600;
+    color: #1e293b;
+}
+
+/* Mobile & Collapsed responsive tweaks */
+@media (max-width: 992px) {
+    .navbar-brand-box {
+        width: auto !important;
+        padding: 0 10px;
+    }
+}
