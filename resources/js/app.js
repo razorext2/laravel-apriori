@@ -1,34 +1,7 @@
 import './bootstrap';
 import { createApp } from 'vue';
 
-// Global mainApp Vue instance
-let mainAppInstance = null;
-const mainApp = createApp({
-    data() {
-        return {
-            judulPage: 'Dashboard'
-        };
-    }
-});
-
-if (document.getElementById('mainApp')) {
-    mainAppInstance = mainApp.mount('#mainApp');
-}
-
-window.renderPage = function (page, judulPage) {
-    const serverUrl = window.server || '/';
-    if (window.$) {
-        $("#divUtama").html("<div class='text-center p-5'><div class='spinner-border text-primary' role='status'></div><p class='mt-2 text-muted'>Memuat data...</p></div>");
-        $("#divUtama").load(serverUrl + page, function () {
-            if (judulPage && mainAppInstance) {
-                mainAppInstance.judulPage = judulPage;
-            }
-            window.initSubPageModules();
-        });
-    }
-};
-
-// Global helpers for service card selection & live summary
+// Global helpers for service card selection & live summary in modals
 window.toggleServiceCard = function (kdProduk) {
     const chk = document.getElementById('chk_' + kdProduk);
     if (chk) {
@@ -69,8 +42,8 @@ window.updateLiveTransactionSummary = function () {
     if (lblBiaya) lblBiaya.innerText = 'Rp. ' + totalBiaya.toLocaleString('id-ID');
 };
 
-// Sub-page modules for Produk, Penjualan, etc.
-window.initSubPageModules = function () {
+// Initialize Page Modules on DOM Load (MPA Architecture)
+document.addEventListener('DOMContentLoaded', function () {
     // 1. Produk Module
     const divProduk = document.getElementById('divDataProduk');
     if (divProduk && !divProduk.__vue_app__) {
@@ -115,9 +88,8 @@ window.initSubPageModules = function () {
                     window.axios.post(rProsesUpdateProduk, { kdProduk, nama, harga, kategori }).then(() => {
                         $("#modalEditProduk").modal("hide");
                         setTimeout(() => {
-                            window.pesanUmumApp('success', 'Sukses', 'Data layanan berhasil diupdate');
-                            window.renderPage('app/produk/data', 'Data Layanan');
-                        }, 300);
+                            window.location.reload();
+                        }, 400);
                     });
                 },
                 prosesTambahProduk() {
@@ -129,17 +101,17 @@ window.initSubPageModules = function () {
                     window.axios.post(rProsesTambahProduk, { nama, harga, kategori }).then(() => {
                         $("#modalTambahProduk").modal("hide");
                         setTimeout(() => {
-                            window.pesanUmumApp('success', 'Sukses', 'Data layanan berhasil ditambahkan');
-                            window.renderPage('app/produk/data', 'Data Layanan');
-                        }, 300);
+                            window.location.reload();
+                        }, 400);
                     });
                 },
                 deleteAtc(idProduk) {
                     window.confirmQuest('info', 'Konfirmasi', 'Hapus layanan ini?', () => {
                         const rProsesHapusProduk = (window.server || '/') + "app/produk/hapus/proses";
                         window.axios.post(rProsesHapusProduk, { idProduk }).then(() => {
-                            window.pesanUmumApp('success', 'Sukses', 'Data layanan berhasil dihapus');
-                            window.renderPage('app/produk/data', 'Data Layanan');
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 300);
                         });
                     });
                 }
@@ -155,13 +127,12 @@ window.initSubPageModules = function () {
             mounted() {
                 if (window.$ && $("#tblDataPenjualan").length) {
                     $("#tblDataPenjualan").DataTable({
-                        "order": [[0, "desc"]]
+                        "order": [[0, "asc"]]
                     });
                 }
             },
             methods: {
                 tambahPenjualanAtc() {
-                    // Reset all selections
                     document.querySelectorAll(".chk-layanan").forEach((el) => {
                         el.checked = false;
                         const box = document.getElementById('box_' + el.value);
@@ -195,9 +166,8 @@ window.initSubPageModules = function () {
                         if (res.data.status === 'sukses') {
                             $("#modalTambahPenjualan").modal("hide");
                             setTimeout(() => {
-                                window.pesanUmumApp('success', 'Sukses', 'Transaksi penjualan berhasil disimpan');
-                                window.renderPage('app/penjualan/data', 'Data Penjualan');
-                            }, 300);
+                                window.location.reload();
+                            }, 400);
                         } else {
                             window.pesanUmumApp('error', 'Gagal', res.data.pesan || 'Gagal menyimpan transaksi');
                         }
@@ -209,23 +179,24 @@ window.initSubPageModules = function () {
                     window.confirmQuest('warning', 'Konfirmasi Hapus', 'Hapus seluruh data pada faktur transaksi ini?', () => {
                         const rProsesHapusPenjualan = (window.server || '/') + "app/penjualan/hapus/proses";
                         window.axios.post(rProsesHapusPenjualan, { no_faktur: noFaktur }).then(() => {
-                            window.pesanUmumApp('success', 'Sukses', 'Data transaksi berhasil dihapus');
-                            window.renderPage('app/penjualan/data', 'Data Penjualan');
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 300);
                         }).catch(() => {
                             window.pesanUmumApp('error', 'Error', 'Gagal menghapus transaksi.');
                         });
                     });
                 },
                 detailAtc(kdFaktur) {
-                    window.renderPage('app/penjualan/detail/' + kdFaktur, 'Detail Penjualan');
+                    window.location.href = (window.server || '/') + 'app/penjualan/detail/' + kdFaktur;
                 }
             }
         });
         divPenjualan.__vue_app__ = appPenjualan.mount('#divDataPenjualan');
     }
-};
 
-// Initial load
-if (document.getElementById('divUtama')) {
-    window.renderPage('dashboard/beranda', 'Dashboard');
-}
+    // 3. Detail Penjualan Table
+    if (window.$ && $("#tblDetailPenjualan").length) {
+        $("#tblDetailPenjualan").DataTable();
+    }
+});

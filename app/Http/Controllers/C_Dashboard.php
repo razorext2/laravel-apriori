@@ -11,15 +11,16 @@ class C_Dashboard extends Controller
 {
     public function dashboard()
     {
-        return view('main.dashboard');
+        return $this->berandaPage();
     }
+
     public function berandaPage()
     {
         $totalProduk = M_Produk::count();
-        $totalPenjualan = M_Penjualan::count();
+        $totalPenjualan = M_Penjualan::distinct('no_faktur')->count('no_faktur');
         $totalHarga = M_Produk::sum('harga');
-        $transaksiTerakhir = M_Penjualan::distinct() -> take (7) -> get(['no_faktur']);
-        $rataRata = $totalHarga / $totalProduk;
+        $transaksiTerakhir = M_Penjualan::distinct()->take(7)->get(['no_faktur']);
+        $rataRata = $totalProduk > 0 ? ($totalHarga / $totalProduk) : 0;
         $dr = [
             'totalProduk' => $totalProduk,
             'totalPenjualan' => $totalPenjualan,
