@@ -144,25 +144,20 @@
                             </a>
                         </li>
 
-                        <li class="menu-title">Master Data</li>
+                        <li class="menu-title">Kelola Data</li>
 
-                        <li class="{{ (Request::is('app/produk*') || Request::is('app/penjualan*')) ? 'mm-active' : '' }}">
-                            <a href="javascript: void(0);" class="has-arrow waves-effect {{ (Request::is('app/produk*') || Request::is('app/penjualan*')) ? 'active' : '' }}">
-                                <i class="mdi mdi-database-outline"></i>
-                                <span>Data Master</span>
+                        <li class="{{ Request::is('app/produk*') ? 'mm-active' : '' }}">
+                            <a href="{{ url('/app/produk/data') }}" class="waves-effect {{ Request::is('app/produk*') ? 'active' : '' }}">
+                                <i class="mdi mdi-format-list-bulleted-type"></i>
+                                <span>Data Layanan</span>
                             </a>
-                            <ul class="sub-menu {{ (Request::is('app/produk*') || Request::is('app/penjualan*')) ? 'mm-show' : '' }}" aria-expanded="{{ (Request::is('app/produk*') || Request::is('app/penjualan*')) ? 'true' : 'false' }}">
-                                <li class="{{ Request::is('app/produk*') ? 'mm-active' : '' }}">
-                                    <a href="{{ url('/app/produk/data') }}" class="{{ Request::is('app/produk*') ? 'active' : '' }}">
-                                        <i class="mdi mdi-format-list-bulleted-type mr-1"></i> Data Layanan
-                                    </a>
-                                </li>
-                                <li class="{{ Request::is('app/penjualan*') ? 'mm-active' : '' }}">
-                                    <a href="{{ url('/app/penjualan/data') }}" class="{{ Request::is('app/penjualan*') ? 'active' : '' }}">
-                                        <i class="mdi mdi-cart-outline mr-1"></i> Data Penjualan
-                                    </a>
-                                </li>
-                            </ul>
+                        </li>
+
+                        <li class="{{ Request::is('app/penjualan*') ? 'mm-active' : '' }}">
+                            <a href="{{ url('/app/penjualan/data') }}" class="waves-effect {{ Request::is('app/penjualan*') ? 'active' : '' }}">
+                                <i class="mdi mdi-cart-outline"></i>
+                                <span>Data Penjualan</span>
+                            </a>
                         </li>
 
                         <li class="menu-title">Data Mining</li>

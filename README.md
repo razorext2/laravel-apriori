@@ -1,100 +1,134 @@
-<p align="center">
-<img src="https://s3-id-jkt-1.kilatstorage.id/hanara/asset/almira/logo/side-logo.png" width="350" alt="logo-almira-tech">
-</p>
+# Sistem Analisa Pola Transaksi Penjualan Layanan (Algoritma Apriori) - Hoya Barbershop
 
-## Aplikasi Analisa Penjualan Menggunakan Metode Apriori
+Aplikasi web sistem informasi berbasis **Laravel 11** dan **Vue 3** yang menerapkan teknik data mining aturan asosiasi (*Association Rule Mining* / *Market Basket Analysis*) menggunakan **Algoritma Apriori**. Sistem ini bertujuan untuk menganalisa kombinasi layanan pangkas rambut yang sering dipesan bersamaan oleh pelanggan pada **Hoya Barbershop**, guna mendukung pengambilan keputusan strategi promosi, bundling layanan, dan optimalisasi pendapatan.
 
-<b>Aplikasi ini sudah tidak di maintenance, untuk versi terbaru aplikasi ini dapat dilihat di youtube <a href="https://www.youtube.com/@AlmiraTechId">Almira Tech</a></b>
+---
 
-<br/>
-<strong>Fitur</strong>
-<li>Manajemen produk</li>
-<li>Manajemen transaksi</li>
-<li>Create dummy data transaksi (untuk keperluan riset/skripsi, sehingga tidak pelu create data transaksi real)</li>
-<li>Analisa penjualan</li>
-<li>Laporan analisa penjualan</li>
+## Fitur Utama
 
-## Tampilan Aplikasi 
+- **Autentikasi & Keamanan**:
+  - Proteksi rute dengan middleware `auth` dan `guest`.
+  - Perlindungan brute force menggunakan rate limiting (`throttle:5,1`).
+  - Session regeneration dan CSRF protection.
+- **Dashboard & Analitik**:
+  - Statistik total layanan, total transaksi unik, rata-rata nominal, dan riwayat transaksi terbaru.
+- **Manajemen Data Layanan**:
+  - Pengelolaan data layanan pangkas rambut dan kategori (tambah, edit, hapus, status aktif).
+- **Manajemen Transaksi Penjualan**:
+  - Pencatatan transaksi multi-layanan per faktur dengan kalkulator live summary.
+  - Detail transaksi faktur dan pencatatan riwayat transaksi.
+- **Proses Data Mining Algoritma Apriori**:
+  - Parameter kustom Minimum Support (%) dan Minimum Confidence (%).
+  - Perhitungan Support 1-Itemset (frekuensi kemunculan tiap layanan).
+  - Pembentukan Itemset Kombinasi (2-Itemset) yang memenuhi Minimum Support.
+  - Perhitungan Nilai Confidence (Aturan Asosiasi $A \rightarrow B$).
+  - Rekomendasi pola kombinasi layanan yang lolos threshold pengujian.
+- **Laporan & Cetak PDF**:
+  - Riwayat pengujian dan analisa tersimpan di database.
+  - Export laporan resmi analisa Apriori ke format PDF menggunakan DomPDF.
 
-- Login Page
+---
 
-<img src="https://s3-id-jkt-1.kilatstorage.id/hanara/screenshoot/analisa-penjualan-apriori/loginpage.png" width="800px"><br/>
+## Teknologi yang Digunakan
 
-- Dashboard Page
+- **Backend Framework**: [Laravel 11](https://laravel.com/) (PHP 8.4)
+- **Frontend**: Blade View, [Vue.js 3](https://vuejs.org/), Bootstrap 4 (Apaxy Theme), Axios, SweetAlert2, DataTables
+- **Asset Bundler**: [Vite](https://vitejs.dev/)
+- **PDF Generator**: `barryvdh/laravel-dompdf`
+- **Database**: MySQL / MariaDB
 
-<img src="https://s3-id-jkt-1.kilatstorage.id/hanara/screenshoot/analisa-penjualan-apriori/dashboardpage.png" width="800px"><br/>
+---
 
-- Data Produk
+## Persyaratan Sistem
 
-<img src="hhttps://s3-id-jkt-1.kilatstorage.id/hanara/screenshoot/analisa-penjualan-apriori/data-produk.png" width="800px"><br/>
+- PHP >= 8.2 (Direkomendasikan PHP 8.4)
+- Composer >= 2.x
+- Node.js >= 18.x & NPM
+- MySQL / MariaDB Server
+- Ekstensi PHP: `pdo_mysql`, `mbstring`, `openssl`, `tokenizer`, `xml`, `ctype`, `json`, `bcmath`, `gd`
 
-- Tambah Data Produk
+---
 
-<img src="https://s3-id-jkt-1.kilatstorage.id/hanara/screenshoot/analisa-penjualan-apriori/tambah-produk.png"><br/>
+## Panduan Instalasi
 
-- Pengujian 1
+Ikuti langkah-langkah berikut untuk menjalankan aplikasi di lingkungan lokal:
 
-<img src="https://s3-id-jkt-1.kilatstorage.id/hanara/screenshoot/analisa-penjualan-apriori/pengujian-1.png" width="800px"><br/>
+### 1. Clone Repository & Masuk ke Direktori Proyek
+```bash
+git clone <repository-url>
+cd apriori
+```
 
-- Pengujian 2
+### 2. Install Dependensi Backend & Frontend
+```bash
+composer install
+npm install
+```
 
-<img src="https://s3-id-jkt-1.kilatstorage.id/hanara/screenshoot/analisa-penjualan-apriori/pengujian-2.png" width="800px"><br/>
+### 3. Konfigurasi Environment (`.env`)
+Salin file konfigurasi environment dari template:
+```bash
+cp .env.example .env
+```
+Sesuaikan pengaturan koneksi database pada berkas `.env`:
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=apriori
+DB_USERNAME=root
+DB_PASSWORD=
+```
 
-- Sukses Pengujian
+### 4. Generate Application Key
+```bash
+php artisan key:generate
+```
 
-<img src="https://s3-id-jkt-1.kilatstorage.id/hanara/screenshoot/analisa-penjualan-apriori/sukses-pengujian.png" width="800px"><br/>
+### 5. Migrasi & Seeder Database
+Jalankan migrasi tabel beserta data awal (termasuk akun administrator default):
+```bash
+php artisan migrate --seed
+```
 
-- Hasil Analisa 1
+### 6. Kompilasi Aset Frontend
+Jalankan kompilasi aset menggunakan Vite:
+```bash
+# Untuk mode produksi
+npm run build
 
-<img src="https://s3-id-jkt-1.kilatstorage.id/hanara/screenshoot/analisa-penjualan-apriori/hasil-pengujian-1.png" width="800px"><br/>
+# Atau untuk mode development (hot reload)
+npm run dev
+```
 
-- Hasil Analisa 2
+### 7. Jalankan Server Aplikasi
+```bash
+php artisan serve
+```
+Aplikasi dapat diakses melalui browser di alamat: `http://localhost:8000` (atau via virtual host Laragon di `http://apriori.test`).
 
-<img src="https://s3-id-jkt-1.kilatstorage.id/hanara/screenshoot/analisa-penjualan-apriori/hasil-pengujian-2.png" width="800px"><br/>
+---
 
-- Laporan Pengujian 2
+## Akun Administrator Default
 
-<img src="https://s3-id-jkt-1.kilatstorage.id/hanara/screenshoot/analisa-penjualan-apriori/laporan-pengujian.png" width="800px"><br/>
+| Username | Password | Role |
+|---|---|---|
+| `admin` | `admin` | `ADMIN` |
 
-<br/>
-<strong>Instalasi</strong>
+---
 
-- Pastikan sudah terinstall composer, lakukan instalasi dependency
+## Custom Artisan Commands
 
-<code>composer update</code>
+Sistem menyediakan command bawaan untuk membantu pengujian data transaksi:
 
-- Copy file .env.example ke .env , setting database, kemudian lakukan migrate & seed : 
+- **Generate Data Transaksi Dummy**:
+  ```bash
+  php artisan createFakePenjualan tf=100
+  ```
+  *Keterangan: Parameter `tf` (total faktur) menentukan berapa banyak transaksi simulasi yang akan dibuat.*
 
-<code>php artisan migrate:refresh --seed</code>
+---
 
-- Lakukan generate key 
+## Lisensi
 
-<code>php artisan key:generate</code>
-
-- Untuk mengimport produk harap edit/sesuaikan format file yang ada di <code>public/file_import/DATA_PRODUK.xlsx</code>, kemudian jalankan perintah :
-
-<code>php artisan importDataProduk</code>
-
-- Untuk mengimport data penjualan/transaksi harap edit/sesuaikan format file yg ada di <code>public/file_import/DATA_PENJUALAN.xlsx</code>, kemudian jalankan perintah :
-
-<code>php artisan importDataPenjualan</code>
-
-- Untuk membuat data transaksi dummy, lakukan dengan perintah berikut, dimana tf(total faktur) adalah total faktur yg akan di create 
-
-<code>php artisan createFakePenjualan tf=100</code>
-
-- Jalankan aplikasi
-
-<code>php artisan serve</code>
-
-- Username : admin, password : admin
-
-Jika terdapat kendala dalam penggunaan/pengembangan aplikasi ini dapat menghubungi 
-
-<strong>(alditha.forum@gmail.com)</strong>
-
-<i>Note : Aplikasi ini sudah tidak dimaintenance, jadi jika bertanya seputar hal teknis kemungkinan tidak akan dijawab, silahkan lihat update terbaru dari versi aplikasi ini di youtube "Almira Tech"</i>
-
-Jika dirasa aplikasinya bermanfaat mungkin kiranya bisa mengapresiasi pengembang aplikasi ini dengan berdonasi di https://saweria.co/haxorsprogramming, berapapun donasi yang diberikan akan sangat membantu kami dalam pengembangan aplikasi" selanjutnya, terima kasih ,,, 
-
-
+Proyek ini dikembangkan untuk kebutuhan analisa data dan riset sistem informasi di bawah lisensi [MIT](LICENSE).
