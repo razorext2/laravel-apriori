@@ -19,11 +19,10 @@
                     <tbody>
                         @foreach($dataPenjualan as $penjualan)
                         <tr>
-                            <td>{{ $loop -> iteration }}</td>
-                            <td>{{ substr($penjualan -> kd_barang, 0, 5) }}</td>
-                            <td>{{ $penjualan -> dataProduk($penjualan -> kd_barang) -> nama_produk}}</td>
-                            <td>{{ $penjualan -> qt }}</td>
-                            
+                            <td>{{ $loop->iteration }}</td>
+                            <td><code>{{ substr($penjualan->kd_barang, 0, 8) }}</code></td>
+                            <td>{{ $penjualan->dataProduk($penjualan->kd_barang)->nama_produk ?? '-' }}</td>
+                            <td>{{ $penjualan->qt }}</td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -34,4 +33,6 @@
     </div>
 </div>
 
-<script src="{{ asset('ladun/base/') }}/js/detailPenjualan.js"></script>
+<script>
+    $("#tblDetailPenjualan").dataTable();
+</script>

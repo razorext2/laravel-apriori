@@ -32,6 +32,7 @@
     <!-- App Css-->
     <link href="{{ asset('ladun/apaxy/') }}/css/app.min.css" rel="stylesheet" type="text/css" />
 
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
 <body data-topbar="dark" data-layout="horizontal">
