@@ -28,6 +28,47 @@ window.renderPage = function (page, judulPage) {
     }
 };
 
+// Global helpers for service card selection & live summary
+window.toggleServiceCard = function (kdProduk) {
+    const chk = document.getElementById('chk_' + kdProduk);
+    if (chk) {
+        chk.checked = !chk.checked;
+        window.syncServiceCard(kdProduk);
+    }
+};
+
+window.syncServiceCard = function (kdProduk) {
+    const chk = document.getElementById('chk_' + kdProduk);
+    const box = document.getElementById('box_' + kdProduk);
+    if (chk && box) {
+        if (chk.checked) {
+            box.style.borderColor = '#556ee6';
+            box.style.backgroundColor = 'rgba(85, 110, 230, 0.08)';
+            box.style.boxShadow = '0 0 0 1px #556ee6';
+        } else {
+            box.style.borderColor = '#e2e8f0';
+            box.style.backgroundColor = '#fff';
+            box.style.boxShadow = 'none';
+        }
+    }
+    window.updateLiveTransactionSummary();
+};
+
+window.updateLiveTransactionSummary = function () {
+    let totalLayanan = 0;
+    let totalBiaya = 0;
+    document.querySelectorAll('.chk-layanan:checked').forEach((el) => {
+        totalLayanan++;
+        totalBiaya += parseFloat(el.getAttribute('data-harga')) || 0;
+    });
+
+    const lblLayanan = document.getElementById('lblTotalLayanan');
+    const lblBiaya = document.getElementById('lblTotalBiaya');
+
+    if (lblLayanan) lblLayanan.innerText = totalLayanan + ' Layanan';
+    if (lblBiaya) lblBiaya.innerText = 'Rp. ' + totalBiaya.toLocaleString('id-ID');
+};
+
 // Sub-page modules for Produk, Penjualan, etc.
 window.initSubPageModules = function () {
     // 1. Produk Module
@@ -74,8 +115,8 @@ window.initSubPageModules = function () {
                     window.axios.post(rProsesUpdateProduk, { kdProduk, nama, harga, kategori }).then(() => {
                         $("#modalEditProduk").modal("hide");
                         setTimeout(() => {
-                            window.pesanUmumApp('success', 'Sukses', 'Data produk berhasil diupdate');
-                            window.renderPage('app/produk/data', 'Produk');
+                            window.pesanUmumApp('success', 'Sukses', 'Data layanan berhasil diupdate');
+                            window.renderPage('app/produk/data', 'Data Layanan');
                         }, 300);
                     });
                 },
@@ -88,33 +129,17 @@ window.initSubPageModules = function () {
                     window.axios.post(rProsesTambahProduk, { nama, harga, kategori }).then(() => {
                         $("#modalTambahProduk").modal("hide");
                         setTimeout(() => {
-                            window.pesanUmumApp('success', 'Sukses', 'Data produk berhasil ditambahkan');
-                            window.renderPage('app/produk/data', 'Produk');
+                            window.pesanUmumApp('success', 'Sukses', 'Data layanan berhasil ditambahkan');
+                            window.renderPage('app/produk/data', 'Data Layanan');
                         }, 300);
                     });
                 },
                 deleteAtc(idProduk) {
-                    window.confirmQuest('info', 'Konfirmasi', 'Hapus produk ini?', () => {
+                    window.confirmQuest('info', 'Konfirmasi', 'Hapus layanan ini?', () => {
                         const rProsesHapusProduk = (window.server || '/') + "app/produk/hapus/proses";
                         window.axios.post(rProsesHapusProduk, { idProduk }).then(() => {
-                            window.pesanUmumApp('success', 'Sukses', 'Data produk berhasil dihapus');
-                            window.renderPage('app/produk/data', 'Produk');
-                        });
-                    });
-                },
-                importProdukAtc() {
-                    $("#modalImportProduk").modal("show");
-                },
-                prosesImportProdukAtc() {
-                    window.confirmQuest('info', 'Konfirmasi', 'Import produk dari template?', () => {
-                        const rProsesImportProduk = (window.server || '/') + "app/produk/import/proses";
-                        window.axios.post(rProsesImportProduk).then((res) => {
-                            const pesan = "Produk berhasil di-import, total " + res.data.totalProduk + " produk.";
-                            $("#modalImportProduk").modal("hide");
-                            setTimeout(() => {
-                                window.pesanUmumApp('success', 'Sukses', pesan);
-                                window.renderPage('app/produk/data', 'Produk');
-                            }, 400);
+                            window.pesanUmumApp('success', 'Sukses', 'Data layanan berhasil dihapus');
+                            window.renderPage('app/produk/data', 'Data Layanan');
                         });
                     });
                 }
@@ -129,10 +154,68 @@ window.initSubPageModules = function () {
         const appPenjualan = createApp({
             mounted() {
                 if (window.$ && $("#tblDataPenjualan").length) {
-                    $("#tblDataPenjualan").DataTable();
+                    $("#tblDataPenjualan").DataTable({
+                        "order": [[0, "desc"]]
+                    });
                 }
             },
             methods: {
+                tambahPenjualanAtc() {
+                    // Reset all selections
+                    document.querySelectorAll(".chk-layanan").forEach((el) => {
+                        el.checked = false;
+                        const box = document.getElementById('box_' + el.value);
+                        if (box) {
+                            box.style.borderColor = '#e2e8f0';
+                            box.style.backgroundColor = '#fff';
+                            box.style.boxShadow = 'none';
+                        }
+                    });
+                    window.updateLiveTransactionSummary();
+                    $("#modalTambahPenjualan").modal("show");
+                },
+                prosesSimpanPenjualan() {
+                    const selectedLayanan = [];
+                    document.querySelectorAll(".chk-layanan:checked").forEach((el) => {
+                        selectedLayanan.push(el.value);
+                    });
+
+                    if (selectedLayanan.length === 0) {
+                        window.pesanUmumApp('warning', 'Peringatan', 'Harap pilih minimal satu layanan yang dipesan pelanggan!');
+                        return;
+                    }
+
+                    const tanggal = document.querySelector("#txtTanggalPenjualan")?.value;
+                    const rProsesTambahPenjualan = (window.server || '/') + "app/penjualan/tambah/proses";
+
+                    window.axios.post(rProsesTambahPenjualan, {
+                        layanan: selectedLayanan,
+                        tanggal: tanggal
+                    }).then((res) => {
+                        if (res.data.status === 'sukses') {
+                            $("#modalTambahPenjualan").modal("hide");
+                            setTimeout(() => {
+                                window.pesanUmumApp('success', 'Sukses', 'Transaksi penjualan berhasil disimpan');
+                                window.renderPage('app/penjualan/data', 'Data Penjualan');
+                            }, 300);
+                        } else {
+                            window.pesanUmumApp('error', 'Gagal', res.data.pesan || 'Gagal menyimpan transaksi');
+                        }
+                    }).catch(() => {
+                        window.pesanUmumApp('error', 'Error', 'Terjadi kesalahan sistem.');
+                    });
+                },
+                hapusPenjualanAtc(noFaktur) {
+                    window.confirmQuest('warning', 'Konfirmasi Hapus', 'Hapus seluruh data pada faktur transaksi ini?', () => {
+                        const rProsesHapusPenjualan = (window.server || '/') + "app/penjualan/hapus/proses";
+                        window.axios.post(rProsesHapusPenjualan, { no_faktur: noFaktur }).then(() => {
+                            window.pesanUmumApp('success', 'Sukses', 'Data transaksi berhasil dihapus');
+                            window.renderPage('app/penjualan/data', 'Data Penjualan');
+                        }).catch(() => {
+                            window.pesanUmumApp('error', 'Error', 'Gagal menghapus transaksi.');
+                        });
+                    });
+                },
                 detailAtc(kdFaktur) {
                     window.renderPage('app/penjualan/detail/' + kdFaktur, 'Detail Penjualan');
                 }

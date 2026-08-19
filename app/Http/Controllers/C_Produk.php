@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Artisan;
 
 use App\Models\M_Produk;
 use App\Models\M_Kategori;
@@ -18,48 +17,41 @@ class C_Produk extends Controller
         $dr = ['dataProduk' => $dataProduk, 'dataKategori' => $dataKategori];
         return view('main.produk.produk', $dr);
     }
+
     public function prosesTambahProduk(Request $request)
     {
-        // {'nama':nama, 'harga':harga, 'kategori':kategori}
         $produk = new M_Produk();
-        $produk -> kd_produk = Str::uuid();
-        $produk -> nama_produk = $request -> nama;
-        $produk -> harga = $request -> harga;
-        $produk -> kd_kategori = $request -> kategori;
-        $produk -> active = "1";
-        $produk -> save();
-        $dr = ['status' => 'sukses'];
-        return response()->json($dr);
-    }
-    public function getDataProdukRes(Request $request)
-    {
-        $dataProduk = M_Produk::where('kd_produk', $request -> idProduk) -> first();
-        // $dr = ['status' => 'sukses'];
-        return response()->json($dataProduk);
-    }
-    public function prosesUpdateProduk(Request $request)
-    {
-        // {'kdProduk':kdProduk, 'nama':nama, 'harga':harga, 'kategori':kategori}
-        M_Produk::where('kd_produk', $request -> kdProduk) -> update([
-            'nama_produk' => $request -> nama,
-            'harga' => $request -> harga,
-            'kd_kategori' => $request -> kategori
-        ]);
-        $dr = ['status' => 'sukses'];
-        return response()->json($dr);
-    }
-    public function prosesHapusProduk(Request $request)
-    {
-        M_Produk::where('kd_produk', $request -> idProduk) -> delete();
+        $produk->kd_produk = (string) Str::uuid();
+        $produk->nama_produk = $request->nama;
+        $produk->harga = $request->harga;
+        $produk->kd_kategori = $request->kategori;
+        $produk->active = "1";
+        $produk->save();
         $dr = ['status' => 'sukses'];
         return response()->json($dr);
     }
 
-    public function prosesImportProduk(Request $request)
+    public function getDataProdukRes(Request $request)
     {
-        Artisan::call('importDataProduk');
-        $totalProduk = M_Produk::count();
-        $dr = ['status' => 'sukses', 'totalProduk' => $totalProduk];
+        $dataProduk = M_Produk::where('kd_produk', $request->idProduk)->first();
+        return response()->json($dataProduk);
+    }
+
+    public function prosesUpdateProduk(Request $request)
+    {
+        M_Produk::where('kd_produk', $request->kdProduk)->update([
+            'nama_produk' => $request->nama,
+            'harga' => $request->harga,
+            'kd_kategori' => $request->kategori
+        ]);
+        $dr = ['status' => 'sukses'];
+        return response()->json($dr);
+    }
+
+    public function prosesHapusProduk(Request $request)
+    {
+        M_Produk::where('kd_produk', $request->idProduk)->delete();
+        $dr = ['status' => 'sukses'];
         return response()->json($dr);
     }
 }

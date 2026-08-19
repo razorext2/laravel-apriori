@@ -5,11 +5,7 @@
                 <p class="card-title-desc">
                     <a class="btn btn-primary waves-effect waves-light" href="javascript:void(0)" @click="tambahProdukAtc()">
                         <i class="mdi mdi-plus-box-multiple-outline"></i>
-                        Tambah Produk Baru
-                    </a>&nbsp;
-                    <a class="btn btn-primary waves-effect waves-light" href="javascript:void(0)" @click="importProdukAtc()">
-                        <i class="mdi mdi-plus-box-multiple-outline"></i>
-                        Import Produk
+                        Tambah Layanan Baru
                     </a>
                 </p>
 
