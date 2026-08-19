@@ -14,14 +14,15 @@ class TblNilaiKombinasi extends Migration
     public function up()
     {
         Schema::create('tbl_nilai_kombinasi', function (Blueprint $table) {
-            $table -> id();
-            $table -> char('kd_pengujian', 100);
-            $table -> char('kd_kombinasi', 200);
-            $table -> char('kd_barang_a', 200);
-            $table -> char('kd_barang_b', 200);
-            $table -> integer('jumlah_transaksi');
-            $table -> float('support');
-            $table -> timestamps();
+            $table->id();
+            $table->char('kd_pengujian', 100);
+            $table->char('kd_kombinasi', 200);
+            $table->char('kd_barang_a', 200);
+            $table->char('kd_barang_b', 200);
+            $table->integer('jumlah_transaksi');
+            $table->float('support');
+            $table->float('confidence')->default(0);
+            $table->timestamps();
         });
     }
 

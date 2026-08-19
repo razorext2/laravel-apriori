@@ -8,9 +8,9 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="text-center mb-5">
-                        <img src="https://nos.jkt-1.neo.id/aditiastorage/asset/logo/almira-tech-circle.png" style="width: 150px;">
-                        <h5 class="font-size-16 text-white mb-4">Aplikasi Analisa Penjualan</h5>
+                    <div class="text-center mb-4">
+                        <a href="{{ url('') }}" class="logo"><img src="{{ asset('ladun/apaxy/images/logo-light.png') }}" height="40" alt="logo"></a>
+                        <h5 class="font-size-16 text-white mt-3 mb-4">Aplikasi Analisa Penjualan</h5>
                     </div>
                 </div>
             </div>

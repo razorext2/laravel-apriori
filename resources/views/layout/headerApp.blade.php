@@ -47,19 +47,19 @@
                     <div class="navbar-brand-box">
                         <a href="{{ url('') }}" class="logo logo-dark">
                             <span class="logo-sm">
-                                <img src="https://nos.jkt-1.neo.id/aditiastorage/asset/logo/logo-side.png" alt="" height="52">
+                                <img src="{{ asset('ladun/apaxy/images/logo-sm-dark.png') }}" alt="" height="22">
                             </span>
                             <span class="logo-lg">
-                                <img src="https://nos.jkt-1.neo.id/aditiastorage/asset/logo/logo-side.png" alt="" height="39">
+                                <img src="{{ asset('ladun/apaxy/images/logo-dark.png') }}" alt="" height="20">
                             </span>
                         </a>
 
                         <a href="{{ url('') }}" class="logo logo-light">
                             <span class="logo-sm">
-                                <img src="https://nos.jkt-1.neo.id/aditiastorage/asset/logo/logo-side.png" alt="" height="52">
+                                <img src="{{ asset('ladun/apaxy/images/logo-sm-light.png') }}" alt="" height="22">
                             </span>
                             <span class="logo-lg">
-                                <img src="https://nos.jkt-1.neo.id/aditiastorage/asset/logo/logo-side.png" alt="" height="39">
+                                <img src="{{ asset('ladun/apaxy/images/logo-light.png') }}" alt="" height="20">
                             </span>
                         </a>
                     </div>

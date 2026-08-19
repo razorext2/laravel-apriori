@@ -1,40 +1,40 @@
 <div class="row" id="divDataMentor">
     <div class="col-md-6">
         <div class="card">
-            <div class="card-header">Setup nilai support & confidence</div>
+            <div class="card-header">Setup Nilai Support & Confidence</div>
             <div class="card-body" id="divFormSupp">
                 <div class="form-group">
                     <label>Nama Penguji</label>
-                    <input type="text" class="form-control" id="txtNama" placeholder="Masukkan nama penguji" value="Aditia Darma">
+                    <input type="text" class="form-control" id="txtNama" placeholder="Masukkan nama penguji" value="Administrator">
                 </div>
                 <div class="form-group">
-                    <label for="company">Min. Support</label> <small>Semakin rendah nilai support akan semakin banyak proses yang mengakibatkan proses apriori menjadi lama</small>
+                    <label for="txtSupport">Min. Support (%)</label> <br/>
+                    <small class="text-muted">Batas persentase minimum kemunculan produk dalam seluruh transaksi (Rekomendasi: 10% - 25%)</small>
                     <select class="form-control" id="txtSupport">
-                        <?php
-                        $x = 1;
-                        for ($x; $x <= 100; $x++) { ?>
-                            <option value="<?= $x; ?>"><?= $x; ?></option>
+                        <?php for ($x = 1; $x <= 100; $x++) { ?>
+                            <option value="<?= $x; ?>" <?= ($x == 20) ? 'selected' : ''; ?>><?= $x; ?> %</option>
                         <?php } ?>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="company">Min. Confidence</label>
+                    <label for="txtConfidence">Min. Confidence (%)</label> <br/>
+                    <small class="text-muted">Batas persentase kepastian hubungan sebab-akibat antar produk (Rekomendasi: 30% - 60%)</small>
                     <select class="form-control" id="txtConfidence">
-                        <?php
-                        $x = 1;
-                        for ($x; $x <= 100; $x++) { ?>
-                            <option value="<?= $x; ?>"><?= $x; ?></option>
+                        <?php for ($x = 1; $x <= 100; $x++) { ?>
+                            <option value="<?= $x; ?>" <?= ($x == 40) ? 'selected' : ''; ?>><?= $x; ?> %</option>
                         <?php } ?>
                     </select>
                 </div>
-                <div class="form-group">
-                    <a class="btn btn-primary" href="javascript:void(0)" onclick="prosesApriori()">Mulai Analisa Penjualan</a>
+                <div class="form-group mt-4">
+                    <a class="btn btn-primary btn-block" href="javascript:void(0)" onclick="prosesApriori()">
+                        <i class="mdi mdi-play-circle-outline mr-1"></i> Mulai Analisa Apriori
+                    </a>
                 </div>
             </div>
 
             <div id="divLoadingPengujian" style="text-align: center;margin-bottom:30px;display:none;">
                 <img src="{{ asset('ladun/base/loading.svg') }}"><br/>
-                Memproses apriori, akan memakan waktu sesuai dengan banyaknya data yang diproses
+                <p class="mt-2 text-muted">Sedang memproses algoritma Apriori...</p>
             </div>
 
         </div>
@@ -56,19 +56,21 @@
             'confidence': confidence,
             'nama' : nama
         }
-        confirmQuest('info', 'Konfirmasi', 'Mulai analisa penjualan ... ?', function (x) {konfirmasiApriori(ds)});
+        confirmQuest('info', 'Konfirmasi', 'Mulai analisa Apriori dengan Min Support ' + support + '% dan Min Confidence ' + confidence + '%?', function (x) {konfirmasiApriori(ds)});
     }
-
 
     function konfirmasiApriori(ds)
     {
         $("#divFormSupp").hide();
         $("#divLoadingPengujian").show();
         axios.post(rProsesApriori, ds).then(function(res){
-            console.log(res.data);
             let kdPengujian = res.data.kdPengujian;
-            pesanUmumApp('success', 'Sukses', 'Proses analisa apriori selesai ..');
+            pesanUmumApp('success', 'Sukses', 'Proses analisa Apriori selesai.');
             renderPage('app/apriori/analisa/hasil/'+kdPengujian, 'Hasil Analisa');
+        }).catch(function(err){
+            $("#divLoadingPengujian").hide();
+            $("#divFormSupp").show();
+            pesanUmumApp('error', 'Gagal', 'Terjadi kesalahan saat memproses data.');
         });
     }
 

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -20,99 +21,132 @@ class C_Apriori extends Controller
 
     public function prosesAnalisaApriori(Request $request)
     {
-        $minSupp = $request->support;
-        $minConfidence = $request->confidence;
-        // insert data pengujian
-        $kdPengujian = Str::uuid();
-        $pengujian = new M_Pengujian();
-        $pengujian->kd_pengujian = $kdPengujian;
-        $pengujian->nama_penguji = $request->nama;
-        $pengujian->min_supp = $minSupp;
-        $pengujian->min_confidence = $minConfidence;
-        $totalProduk = M_Produk::count();
-        // cari nilai support
-        $dataProduk = M_Produk::all();
-        foreach($dataProduk as $produk){
-            $kdProduk = $produk -> kd_produk;
-            $totalTransaksi = M_Penjualan::where('kd_barang', $kdProduk) -> count();
-            $nSupport = ($totalTransaksi / $totalProduk) * 100;
-            $supp = new M_Support();
-            $supp -> kd_pengujian = $kdPengujian;
-            $supp -> kd_produk = $kdProduk;
-            $supp -> support = $nSupport;
-            $supp -> save();
-        }
-        // kombinasi 2 item set
-        $qProdukA = M_Support::where('kd_pengujian', $kdPengujian) -> where('support', '>=', $minSupp) -> get();
-        foreach($qProdukA as $qProdA){
-            $kdProdukA = $qProdA -> kd_produk;
-            $qProdukB = M_Support::where('kd_pengujian', $kdPengujian) -> where('support', '>=', $minSupp) -> get();
-            foreach($qProdukB as $qProdB){
-                $kdProdukB = $qProdB -> kd_produk;
-                $jumB = M_Nilai_Kombinasi::where('kd_barang_a', $kdProdukB) -> count();
-                if($jumB > 0){
+        $minSupp = floatval($request->support);
+        $minConfidence = floatval($request->confidence);
+        $namaPenguji = $request->nama ?? 'Administrator';
 
-                }else{
-                    if($kdProdukA == $kdProdukB){
-
-                    }else{
-                        $kdKombinasi = Str::uuid();
-                        $nk = new M_Nilai_Kombinasi();
-                        $nk -> kd_pengujian = $kdPengujian;
-                        $nk -> kd_kombinasi = $kdKombinasi;
-                        $nk -> kd_barang_a = $kdProdukA;
-                        $nk -> kd_barang_b = $kdProdukB;
-                        $nk -> jumlah_transaksi = 0;
-                        $nk -> support = 0;
-                        $nk -> save();
-                    }
-                }
-            }
-        }
-
-        // kombinasi 2 itemset phase 2
-        $nilaiKombinasi = M_Nilai_Kombinasi::where('kd_pengujian', $kdPengujian) -> get();
-        $no = 1;
-        foreach($nilaiKombinasi as $nk){
-            $kdKombinasi = $nk -> kd_kombinasi;
-            $kdBarangA = $nk -> kd_barang_a;
-            $kdBarangB = $nk -> kd_barang_b;
-
-            // cari total transaksi
-            $dataFaktur = M_Penjualan::distinct() -> get(['no_faktur']);
-            $fnTransaksi = 0;
-            foreach($dataFaktur as $faktur){
-                $noFaktur = $faktur -> no_faktur;
-                $qBonTransaksiA = M_Penjualan::where('no_faktur', $noFaktur) -> where('kd_barang', $kdBarangA) -> count();
-                $qBonTransaksiB = M_Penjualan::where('no_faktur', $noFaktur) -> where('kd_barang', $kdBarangB) -> count();
-                if($qBonTransaksiA == 1 && $qBonTransaksiB == 1){
-                    $fnTransaksi++;
-                }
-            }
-            $support = ($fnTransaksi / $totalProduk) * 100;
-            M_Nilai_Kombinasi::where('kd_pengujian', $kdPengujian) -> where('kd_kombinasi', $kdKombinasi) -> update([
-                'jumlah_transaksi' => $fnTransaksi,
-                'support' => $support
+        // Hitung total seluruh transaksi (jumlah faktur unik)
+        $totalTransaksiSemua = M_Penjualan::distinct('no_faktur')->count('no_faktur');
+        if ($totalTransaksiSemua == 0) {
+            return response()->json([
+                'status' => 'error',
+                'pesan' => 'Belum ada data transaksi yang tersimpan.'
             ]);
         }
 
-        $pengujian -> save();
+        // Insert master pengujian
+        $kdPengujian = (string) Str::uuid();
+        $pengujian = new M_Pengujian();
+        $pengujian->kd_pengujian = $kdPengujian;
+        $pengujian->nama_penguji = $namaPenguji;
+        $pengujian->min_supp = $minSupp;
+        $pengujian->min_confidence = $minConfidence;
+        $pengujian->save();
+
+        // -------------------------------------------------------------
+        // TAHAP 1: Hitung Support 1-Itemset (Kemunculan tiap produk / N)
+        // -------------------------------------------------------------
+        $dataProduk = M_Produk::where('active', '1')->get();
+        foreach ($dataProduk as $produk) {
+            $kdProduk = $produk->kd_produk;
+            $frekuensiItem = M_Penjualan::where('kd_barang', $kdProduk)
+                ->distinct('no_faktur')
+                ->count('no_faktur');
+
+            $nSupport = ($frekuensiItem / $totalTransaksiSemua) * 100;
+
+            $supp = new M_Support();
+            $supp->kd_pengujian = $kdPengujian;
+            $supp->kd_produk = $kdProduk;
+            $supp->support = round($nSupport, 2);
+            $supp->save();
+        }
+
+        // -------------------------------------------------------------
+        // TAHAP 2 & 3: Kombinasi 2-Itemset & Perhitungan Confidence (A => B)
+        // -------------------------------------------------------------
+        // Ambil item yang lolos minimum support
+        $frequentItems = M_Support::where('kd_pengujian', $kdPengujian)
+            ->where('support', '>=', $minSupp)
+            ->get();
+
+        // Siapkan struktur transaksi per faktur di memori
+        $transaksiPerFaktur = [];
+        $semuaPenjualan = M_Penjualan::all();
+        foreach ($semuaPenjualan as $p) {
+            $transaksiPerFaktur[$p->no_faktur][$p->kd_barang] = true;
+        }
+
+        // Simpan frekuensi kemunculan tiap item untuk perhitungan confidence
+        $frekuensiItemMap = [];
+        foreach ($frequentItems as $fi) {
+            $frekuensiItemMap[$fi->kd_produk] = M_Penjualan::where('kd_barang', $fi->kd_produk)
+                ->distinct('no_faktur')
+                ->count('no_faktur');
+        }
+
+        // Buat aturan asosiasi berarah A => B untuk seluruh pasangan item
+        foreach ($frequentItems as $itemA) {
+            $kdBarangA = $itemA->kd_produk;
+            $countA = $frekuensiItemMap[$kdBarangA] ?? 0;
+            if ($countA == 0) continue;
+
+            foreach ($frequentItems as $itemB) {
+                $kdBarangB = $itemB->kd_produk;
+                if ($kdBarangA == $kdBarangB) continue;
+
+                // Hitung berapa faktur yang memuat produk A dan produk B bersamaan
+                $countAB = 0;
+                foreach ($transaksiPerFaktur as $noFaktur => $itemsInFaktur) {
+                    if (isset($itemsInFaktur[$kdBarangA]) && isset($itemsInFaktur[$kdBarangB])) {
+                        $countAB++;
+                    }
+                }
+
+                // Support (A ∪ B) = (countAB / Total Faktur) * 100
+                $supportAB = ($countAB / $totalTransaksiSemua) * 100;
+
+                // Confidence (A => B) = (countAB / countA) * 100
+                $confidenceAB = ($countAB / $countA) * 100;
+
+                $nk = new M_Nilai_Kombinasi();
+                $nk->kd_pengujian = $kdPengujian;
+                $nk->kd_kombinasi = (string) Str::uuid();
+                $nk->kd_barang_a = $kdBarangA;
+                $nk->kd_barang_b = $kdBarangB;
+                $nk->jumlah_transaksi = $countAB;
+                $nk->support = round($supportAB, 2);
+                $nk->confidence = round($confidenceAB, 2);
+                $nk->save();
+            }
+        }
+
         $dr = ['status' => 'sukses', 'kdPengujian' => $kdPengujian];
         return response()->json($dr);
     }
 
     public function hasilAnalisa(Request $request, $kdPengujian)
     {
-        $dataPengujian = M_Pengujian::where('kd_pengujian', $kdPengujian) -> first();
-        $dataSupportProduk = M_Support::where('kd_pengujian', $kdPengujian) -> get();
-        $dataMinSupp = M_Support::where('kd_pengujian', $kdPengujian) -> where('support', '>=', $dataPengujian -> min_supp) -> get();
-        $dataKombinasiItemset = M_Nilai_Kombinasi::where('kd_pengujian', $kdPengujian) -> get();
-        $dataMinConfidence = M_Nilai_Kombinasi::where('kd_pengujian', $kdPengujian) -> where('support', '>=', $dataPengujian -> min_confidence) -> get();
-        $totalProduk = M_Produk::count();
-        // dd($dataSupportProduk);
+        $dataPengujian = M_Pengujian::where('kd_pengujian', $kdPengujian)->first();
+        $totalTransaksiSemua = M_Penjualan::distinct('no_faktur')->count('no_faktur');
+        $totalProduk = M_Produk::where('active', '1')->count();
+
+        $dataSupportProduk = M_Support::where('kd_pengujian', $kdPengujian)->get();
+        $dataMinSupp = M_Support::where('kd_pengujian', $kdPengujian)
+            ->where('support', '>=', $dataPengujian->min_supp)
+            ->get();
+
+        $dataKombinasiItemset = M_Nilai_Kombinasi::where('kd_pengujian', $kdPengujian)->get();
+        
+        $dataMinConfidence = M_Nilai_Kombinasi::where('kd_pengujian', $kdPengujian)
+            ->where('support', '>=', $dataPengujian->min_supp)
+            ->where('confidence', '>=', $dataPengujian->min_confidence)
+            ->get();
+
         $dr = [
             'dataSupport' => $dataSupportProduk,
             'totalProduk' => $totalProduk,
+            'totalTransaksi' => $totalTransaksiSemua,
             'dataPengujian' => $dataPengujian,
             'dataMinSupport' => $dataMinSupp,
             'dataKombinasiItemset' => $dataKombinasiItemset,
@@ -124,17 +158,23 @@ class C_Apriori extends Controller
 
     public function cetakAnalisa(Request $request, $kdPengujian)
     {
-        $dataPengujian = M_Pengujian::where('kd_pengujian', $kdPengujian) -> first();
-        $dataMinConfidence = M_Nilai_Kombinasi::where('kd_pengujian', $kdPengujian) -> where('support', '>=', $dataPengujian -> min_confidence) -> get();
-        $totalProduk = M_Produk::count();
+        $dataPengujian = M_Pengujian::where('kd_pengujian', $kdPengujian)->first();
+        $totalTransaksiSemua = M_Penjualan::distinct('no_faktur')->count('no_faktur');
+        $totalProduk = M_Produk::where('active', '1')->count();
+
+        $dataMinConfidence = M_Nilai_Kombinasi::where('kd_pengujian', $kdPengujian)
+            ->where('support', '>=', $dataPengujian->min_supp)
+            ->where('confidence', '>=', $dataPengujian->min_confidence)
+            ->get();
+
         $dr = [
             'kdPengujian' => $kdPengujian,
             'dataPengujian' => $dataPengujian,
             'dataMinConfidence' => $dataMinConfidence,
-            'totalProduk' => $totalProduk
+            'totalProduk' => $totalProduk,
+            'totalTransaksi' => $totalTransaksiSemua
         ];
-        $pdf = PDF::loadview('main.apriori.cetakAnalisa', $dr);
-        return $pdf -> stream();
+        $pdf = Pdf::loadView('main.apriori.cetakAnalisa', $dr);
+        return $pdf->stream();
     }
-
 }

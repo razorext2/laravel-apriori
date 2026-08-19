@@ -15,19 +15,24 @@ class S_Kategori extends Seeder
      */
     public function run()
     {
-        $kategori = array("SAYURAN", "MINYAK", "TELUR", "TEPUNG", "SIRUP", "MAKANANRINGAN", "BUMBU", "DAGING", "DETERJEN", "PEWANGI", "SABUN", "OBAT", "MINUMAN");
-        for($x = 0; $x < count($kategori); $x++){
-            $this -> createKategori($kategori[$x]);
+        $kategori = [
+            "PANGKAS & STYLING",
+            "PERAWATAN RAMBUT",
+            "CUKUR & GROOMING",
+            "PEWARNAAN RAMBUT"
+        ];
+
+        foreach ($kategori as $nama) {
+            $this->createKategori($nama);
         }
     }
 
     function createKategori($namaKategori)
     {
         $kategori = new M_Kategori();
-        $kategori -> kd_kategori = Str::uuid();
-        $kategori -> nama_kategori = $namaKategori;
-        $kategori -> active = "1";
-        $kategori -> save();
+        $kategori->kd_kategori = Str::uuid();
+        $kategori->nama_kategori = $namaKategori;
+        $kategori->active = "1";
+        $kategori->save();
     }
-
 }
