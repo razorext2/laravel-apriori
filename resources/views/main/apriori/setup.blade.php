@@ -4,9 +4,9 @@
 
 @section('content')
 <div class="row" id="divSetupApriori">
-    <div class="col-md-6">
+    <div class="col-lg-7 col-md-12">
         <div class="card">
-            <div class="card-header bg-light">
+            <div class="card-header bg-light d-flex justify-content-between align-items-center">
                 <h5 class="card-title mb-0">
                     <i class="mdi mdi-tune mr-1 text-primary"></i> Setup Parameter Algoritma Apriori
                 </h5>
@@ -43,12 +43,11 @@
 
             <div id="divLoadingPengujian" style="text-align: center; padding: 40px; display: none;">
                 <div class="spinner-border text-primary mb-3" style="width: 3rem; height: 3rem;" role="status"></div>
-                <h5 class="text-dark">Sedang memproses algoritma Apriori...</h5>
-                <p class="text-muted">Menghitung support 1-itemset, 2-itemset, dan confidence asosiasi layanan.</p>
+                <h5 class="text-dark">Sedang memproses kalkulasi via API Management...</h5>
+                <p class="text-muted">Mengirim payload transaksi ke API Hub Gateway dan menghitung itemset serta confidence secara terpusat.</p>
             </div>
 
         </div>
-
     </div>
 </div>
 
@@ -74,14 +73,20 @@
         $("#divLoadingPengujian").show();
         axios.post(rProsesApriori, ds).then(function(res){
             let kdPengujian = res.data.kdPengujian;
-            pesanUmumApp('success', 'Sukses', 'Proses analisa Apriori selesai.');
+            let execTime = res.data.execution_time_ms ? ' (' + res.data.execution_time_ms + ' ms)' : '';
+            pesanUmumApp('success', 'Sukses', 'Kalkulasi Apriori selesai' + execTime + '.');
             setTimeout(function() {
-                window.location.href = (window.server || '/') + 'app/apriori/analisa/hasil/' + kdPengujian;
+                if (window.spaNavigate) {
+                    window.spaNavigate((window.server || '/') + 'app/apriori/analisa/hasil/' + kdPengujian);
+                } else {
+                    window.location.href = (window.server || '/') + 'app/apriori/analisa/hasil/' + kdPengujian;
+                }
             }, 800);
         }).catch(function(err){
             $("#divLoadingPengujian").hide();
             $("#divFormSupp").show();
-            pesanUmumApp('error', 'Gagal', 'Terjadi kesalahan saat memproses data.');
+            let pesan = err.response?.data?.pesan || err.message || 'Terjadi kesalahan saat memproses data.';
+            pesanUmumApp('error', 'Gagal', pesan);
         });
     }
 </script>

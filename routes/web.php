@@ -56,6 +56,7 @@ Route::middleware('auth')->group(function () {
 
     // Modul Apriori
     Route::get('/app/apriori/setup', [C_Apriori::class, 'setupPerhitunganApriori'])->name('apriori.setup');
+    Route::get('/app/apriori/api-status', [C_Apriori::class, 'checkApiStatus'])->name('apriori.api_status');
     Route::post('/app/apriori/analisa/proses', [C_Apriori::class, 'prosesAnalisaApriori'])->name('apriori.analisa');
     Route::get('/app/apriori/analisa/hasil/{kdPengujian}', [C_Apriori::class, 'hasilAnalisa'])->name('apriori.hasil');
     Route::get('/apriori/analisa/cetak/{kdPengujian}', [C_Apriori::class, 'cetakAnalisa'])->name('apriori.cetak');

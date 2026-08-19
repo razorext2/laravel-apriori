@@ -30,4 +30,11 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'apriori_api' => [
+        'base_url' => env('APRIORI_API_BASE_URL', 'https://api-management.dev'),
+        'api_key' => env('APRIORI_API_KEY', ''),
+        'timeout' => (int) env('APRIORI_API_TIMEOUT', 60),
+    ],
+
 ];
+

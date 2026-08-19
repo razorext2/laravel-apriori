@@ -63,33 +63,53 @@ window.prosesApriori = function () {
         confidence: confidence
     };
 
-    const divForm = document.querySelector("#divFormSupp");
-    const divLoading = document.querySelector("#divLoadingPengujian");
-    if (divForm) divForm.style.display = "none";
-    if (divLoading) divLoading.style.display = "block";
+    const doExecution = () => {
+        const divForm = document.querySelector("#divFormSupp");
+        const divLoading = document.querySelector("#divLoadingPengujian");
+        if (divForm) divForm.style.display = "none";
+        if (divLoading) divLoading.style.display = "block";
 
-    window.axios.post((window.server || '/') + 'app/apriori/analisa/proses', ds).then((res) => {
-        if (res.data.status === 'sukses') {
-            const targetUrl = (window.server || '/') + 'app/apriori/analisa/hasil/' + res.data.kdPengujian;
-            if (window.spaNavigate) {
-                window.spaNavigate(targetUrl);
+        window.axios.post((window.server || '/') + 'app/apriori/analisa/proses', ds).then((res) => {
+            if (res.data.status === 'sukses') {
+                const targetUrl = (window.server || '/') + 'app/apriori/analisa/hasil/' + res.data.kdPengujian;
+                const execTime = res.data.execution_time_ms ? ` (${res.data.execution_time_ms} ms)` : '';
+                if (window.pesanUmumApp) {
+                    window.pesanUmumApp('success', 'Sukses', 'Kalkulasi Apriori selesai via API Hub' + execTime + '.');
+                }
+                setTimeout(() => {
+                    if (window.spaNavigate) {
+                        window.spaNavigate(targetUrl);
+                    } else {
+                        window.location.href = targetUrl;
+                    }
+                }, 700);
             } else {
-                window.location.href = targetUrl;
+                if (divForm) divForm.style.display = "block";
+                if (divLoading) divLoading.style.display = "none";
+                const errMsg = res.data.pesan || 'Gagal memproses analisa Apriori.';
+                if (window.pesanUmumApp) {
+                    window.pesanUmumApp('error', 'Gagal', errMsg);
+                } else {
+                    alert(errMsg);
+                }
             }
-        } else {
+        }).catch((err) => {
             if (divForm) divForm.style.display = "block";
             if (divLoading) divLoading.style.display = "none";
+            const errMsg = err.response?.data?.pesan || err.message || 'Terjadi kesalahan saat memproses data.';
             if (window.pesanUmumApp) {
-                window.pesanUmumApp('error', 'Gagal', res.data.pesan || 'Gagal memproses analisa Apriori');
+                window.pesanUmumApp('error', 'Gagal API', errMsg);
             } else {
-                alert(res.data.pesan || 'Gagal memproses analisa Apriori');
+                alert(errMsg);
             }
-        }
-    }).catch(() => {
-        if (divForm) divForm.style.display = "block";
-        if (divLoading) divLoading.style.display = "none";
-        alert('Terjadi kesalahan koneksi server.');
-    });
+        });
+    };
+
+    if (window.confirmQuest) {
+        window.confirmQuest('info', 'Konfirmasi', `Mulai analisa Apriori dengan Min Support ${support}% dan Min Confidence ${confidence}%?`, doExecution);
+    } else {
+        doExecution();
+    }
 };
 
 // ==========================================================================

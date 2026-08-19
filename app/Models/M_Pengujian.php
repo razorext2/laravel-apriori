@@ -13,7 +13,11 @@ class M_Pengujian extends Model
         'kd_pengujian',
         'nama_penguji',
         'min_supp',
-        'min_confidence'
+        'min_confidence',
+        'execution_time_ms',
+        'total_frequent_itemsets',
+        'total_rules',
+        'api_status'
     ];
 
     public function totalPolaProduk($kdPengujian, $confidence)

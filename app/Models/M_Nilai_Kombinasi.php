@@ -17,7 +17,8 @@ class M_Nilai_Kombinasi extends Model
         'kd_barang_b',
         'jumlah_transaksi',
         'support',
-        'confidence'
+        'confidence',
+        'lift_ratio'
     ];
 
     public function dataProduk($kdProduk)
